@@ -1,3 +1,69 @@
-1. About This Project & File StructureProject DescriptionThis project focuses on designing an RDFS schema and processing semantic data as part of a COMP318 assignment. It involves extracting data from a CSV file, mapping it to a custom vocabulary using a deterministic IRI minting policy, and constructing an RDF graph.  The primary objectives and modelling strategies of this project include:Namespace Separation: Maintaining a strict separation between the conceptual model using the ontology namespace (http://example.org/comp318/onto#) and data instances using the resource namespace (http://example.org/comp318/res/).  Deterministic IRI Minting: Ensuring resource stability and preventing duplicates by using category-based paths (e.g., res:assignment/A0001) and stable organization identifiers instead of labels.  Strict Typing & Granularity: Enforcing xsd:date for start and end dates to enable chronological filtering, and modelling cities and countries as separate properties for granular geographical queries.  RDFS Expressivity: Relying strictly on RDFS semantics to manage inferences, avoiding the overhead of OWL. This includes utilizing domain and range constraints to ensure the RDFS reasoner correctly infers target classes.  File Structure & FunctionalityHere is a breakdown of the key files involved in this project:main.py: The core Python script that reads data from placements.csv, builds the RDF graph, serializes the output into Turtle format, applies RDFS closure using the owlrl library, evaluates entailment conditions, and executes four distinct SPARQL queries.MODELLING_NOTES.pdf: Documentation outlining the schema design decisions, including the namespace policy, IRI minting rules, field modelling choices, and the rationale behind using strictly RDFS semantics.  ENTAILMENT_EVIDENCE.pdf: A detailed report explaining the four logical inferences verified by the system, demonstrating how RDFS domain, range, and subclass rules are applied to the generated data.  schema.ttl (referenced in code): The ontology file parsed by the script to load the conceptual model before applying the reasoner.placements.csv (referenced in code): The source data file read by the script to generate the resource instances.2. Set-UpBefore running this project, ensure your local environment has the following dependencies installed:Python: Python 3.x installed on your system.Python Libraries: The script relies on standard libraries (csv, os) as well as external semantic web packages. Install the required packages using pip:Bashpip install rdflib owlrl
-3. CompilationSince this project is written in Python, traditional compilation is not required. You simply need to execute the main script using the Python interpreter from your command line. Ensure that schema.ttl and placements.csv are present in the same root directory before running.4. ExecutionYou can run the entire pipeline at once by executing the Python script in your terminal.Running the Script:Open your terminal in the project directory and run:Bashpython main.py
-Expected Results:Upon execution, the script will automatically create an outputs directory (if it does not already exist) and generate the following files:outputs/data.ttl: The constructed RDF graph serialized in Turtle format.outputs/entailment_report.txt: A text file reporting the pass/fail status of four specific RDFS inferences. For example, it verifies if resources are correctly inferred as instances of ex:Assignment or ex:Person based on domain and range rules, and checks subclass materialization.outputs/answers.txt: A text file containing the tabulated results of four SPARQL queries executed against the entailed graph. These queries extract information such as ongoing assignments, project assignment counts, and cities hosting organizations from multiple countries.
+# Semantic Web & RDF Graph Processing (rdflib)
+
+<div align="center">
+  <img src="https://img.shields.io/badge/Language-Python-blue.svg" alt="Python">
+  <img src="https://img.shields.io/badge/Library-rdflib-green.svg" alt="rdflib">
+  <img src="https://img.shields.io/badge/Library-owlrl-orange.svg" alt="owlrl">
+</div>
+
+---
+
+## 1. About This Project & File Structure
+
+### Project Description
+This project implements a Semantic Web data pipeline using Python, `rdflib`, and `owlrl` to parse tabular data into a structured knowledge graph. 
+
+The primary objective of this project is to build and analyze an RDF graph by determining the optimal strategy for:
+* **Data Transformation:** Converting raw CSV data (`placements.csv`) regarding personnel assignments, projects, and organizations into formalized RDF triples using custom namespaces.
+* **Ontology & Reasoning:** Applying RDFS semantics and reasoning (entailment) via `owlrl` using a predefined schema (`schema.ttl`) to infer new relationships and validate data integrity.
+* **Data Extraction (SPARQL):** Formulating and executing complex SPARQL queries to extract insights, such as calculating project assignment statistics, filtering by date constraints, and identifying multi-country organizational operations.
+
+This project covers essential Semantic Web and Knowledge Graph concepts, including URI generation, RDF serialization (Turtle format), graph querying, and logic-based entailment testing.
+
+### File Structure & Functionality
+Here is a breakdown of the key files involved in this repository:
+* **`main.py`**: The core Python script containing the complete pipeline. It handles CSV reading, RDF graph construction, entailment checking, and SPARQL query execution.
+* **`placements.csv`** *(Input)*: The raw dataset containing assignment details, person IDs, project codes, and organization locations.
+* **`schema.ttl`** *(Input)*: The Turtle file containing the RDFS ontology rules used to infer new knowledge during the entailment phase.
+* **`outputs/`** *(Generated)*: A directory created automatically upon execution. It houses:
+  * `data.ttl`: The serialized RDF graph in Turtle format.
+  * `entailment_report.txt`: The PASS/FAIL results of the automated RDFS entailment tests.
+  * `answers.txt`: The formatted results returned by the 4 SPARQL queries.
+
+---
+
+## 2. Set-Up
+Before running this project, ensure your local environment has the following dependencies installed:
+
+1. **Python:** Python 3.x installed on your system.
+2. **Input Files:** Ensure `placements.csv` and `schema.ttl` are placed in the same root directory as the script.
+3. **Python Libraries:** Install the required Semantic Web packages using `pip`:
+```bash
+pip install rdflib owlrl
+```
+
+3. Compilation
+Since this project is written in standard Python, traditional compilation (like make or gcc) is not required. Instead, you utilize the Python interpreter to execute the script directly from your terminal.
+
+Open your terminal in the project directory where main.py is located to prepare for execution.
+
+4. Execution
+Unlike interactive Jupyter Notebooks, you run this pipeline as a single command-line execution.
+
+Running the Script:
+Open your terminal and run the following command:
+
+Bash
+python main.py
+Expected Results:
+Once the script finishes executing, you should see the following outputs:
+
+Console Output: The script will print a single integer to the terminal, representing the total number of triples successfully loaded and inferred within the RDF graph.
+
+Generated Outputs Directory: A new folder named outputs will appear in your project directory containing:
+
+data.ttl: The complete graph data mapped from your CSV.
+
+entailment_report.txt: A text log detailing whether Entailments 1 through 4 resulted in a "PASS" or "FAIL".
+
+answers.txt: A text file documenting the structured results of the 4 SPARQL queries (e.g., ongoing assignment statuses, project counts, and grouped city/country data).
