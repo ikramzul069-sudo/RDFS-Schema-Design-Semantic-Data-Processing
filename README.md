@@ -11,24 +11,25 @@
 ## 1. About This Project & File Structure
 
 ### Project Description
-This project implements a Semantic Web data pipeline using Python, `rdflib`, and `owlrl` to parse tabular data into a structured knowledge graph. 
+This project implements a Semantic Web data pipeline using Python, `rdflib`, and `owlrl` to parse tabular human resources and academic data into a structured knowledge graph. 
 
 The primary objective of this project is to build and analyze an RDF graph using:
-* **Data Transformation:** Converting raw CSV data (`placements.csv`) regarding personnel assignments, projects, and organizations into formalized RDF triples using custom namespaces.
-* **Ontology & Reasoning:** Applying RDFS semantics and reasoning (entailment) via `owlrl` using a predefined schema (`schema.ttl`) to infer new relationships and validate data integrity.
-* **Data Extraction (SPARQL):** Formulating and executing complex SPARQL queries to extract insights, such as calculating project assignment statistics, filtering by date constraints, and identifying multi-country organizational operations.
+* **Data Transformation:** Processing raw CSV data (`placements.csv`) regarding researchers, internal organizations, and multi-year project assignments, transforming them into formalized RDF triples using standard and custom namespaces (`ex`, `foaf`, `rdf`, `rdfs`).
+* **Ontology & Reasoning:** Applying RDFS semantics and logical reasoning via `owlrl` using a custom ontology definition (`schema.ttl` or generated via `schema.py`) to infer implicit relationships, handle subclass hierarchies, and ensure data consistency.
+* **Data Extraction (SPARQL):** Executing automated SPARQL queries to answer specific structural and statistical questions, such as tracking active assignment dates, aggregate project counts, and operational mappings across cities and countries.
 
-This project covers essential Semantic Web and Knowledge Graph concepts, including URI generation, RDF serialization (Turtle format), graph querying, and logic-based entailment testing.
+This project covers essential Semantic Web and Knowledge Graph concepts, including URI generation, automated RDFS entailment checking, graph serialization (Turtle format), and semantic querying.
 
 ### File Structure & Functionality
 Here is a breakdown of the key files involved in this repository:
-* **`main.py`**: The core Python script containing the complete pipeline. It handles CSV reading, RDF graph construction, entailment checking, and SPARQL query execution.
-* **`placements.csv`** *(Input)*: The raw dataset containing assignment details, person IDs, project codes, and organization locations.
-* **`schema.ttl`** *(Input)*: The Turtle file containing the RDFS ontology rules used to infer new knowledge during the entailment phase.
-* **`outputs/`** *(Generated)*: A directory created automatically upon execution. It houses:
-  * `data.ttl`: The serialized RDF graph in Turtle format.
-  * `entailment_report.txt`: The PASS/FAIL results of the automated RDFS entailment tests.
-  * `answers.txt`: The formatted results returned by the 4 SPARQL queries.
+* **`main.py`**: The core Python script containing the execution pipeline. It reads the CSV dataset, builds the base RDF graph, triggers the `owlrl` reasoning engine, runs verification queries, and serializes all final logs.
+* **`schema.py`**: A programmatic definition script used to generate or manage the semantic schema triples, structural properties, and RDFS constraint hierarchies.
+* **`placements.csv`** *(Input)*: The raw dataset containing tabular relationship data, including unique IDs, names, project roles, timeline dates, and geographical locations.
+* **`schema.ttl`** *(Input)*: The Turtle file containing the core RDFS ontology classes, sub-properties, and domain/range definitions used by the reasoner during the entailment phase.
+* **`outputs/`** *(Generated)*: A directory created automatically upon running the pipeline. It houses:
+  * `data.ttl`: The final, inferred RDF knowledge graph serialized in Turtle format.
+  * `entailment_report.txt`: A verification text file logging the PASS/FAIL validation status of target RDFS logical assertions.
+  * `answers.txt`: The formatted and clean query outputs answering the project's analytical SPARQL requirements.
 
 ---
 
@@ -36,34 +37,33 @@ Here is a breakdown of the key files involved in this repository:
 Before running this project, ensure your local environment has the following dependencies installed:
 
 1. **Python:** Python 3.x installed on your system.
-2. **Input Files:** Ensure `placements.csv` and `schema.ttl` are placed in the same root directory as the script.
-3. **Python Libraries:** Install the required Semantic Web packages using `pip`:
+2. **Input Files:** Ensure `placements.csv`, `schema.py`, and `schema.ttl` are located in the root directory.
+3. **Python Libraries:** Install the required Semantic Web modeling and parsing packages using `pip`:
 ```bash
 pip install rdflib owlrl
 ```
 
-3. Compilation
-Since this project is written in standard Python, traditional compilation (like make or gcc) is not required. Instead, you utilize the Python interpreter to execute the script directly from your terminal.
-
+## 3. Compilation
 Open your terminal in the project directory where main.py is located to prepare for execution.
 
-4. Execution
-Unlike interactive Jupyter Notebooks, you run this pipeline as a single command-line execution.
+## 4. Execution
+The data engineering and reasoning pipeline is designed to run as a single command-line execution.
 
 Running the Script:
-Open your terminal and run the following command:
-
-Bash
+Open your terminal and execute the main pipeline script:
+```Bash
 python main.py
+```
+
 Expected Results:
-Once the script finishes executing, you should see the following outputs:
+Once the graph parsing and logical reasoning loops complete successfully, you will see the following outputs:
 
-Console Output: The script will print a single integer to the terminal, representing the total number of triples successfully loaded and inferred within the RDF graph.
+Console Output: The terminal will instantly print an integer count, which represents the total volume of base triples loaded combined with the newly inferred structural triples generated by the RDFS reasoner.
 
-Generated Outputs Directory: A new folder named outputs will appear in your project directory containing:
+Generated Outputs Directory: A new outputs/ folder will be created in the workspace containing:
 
-data.ttl: The complete graph data mapped from your CSV.
+data.ttl: The fully expanded knowledge graph including all raw data and logically deduced relationships, saved cleanly in Turtle syntax.
 
-entailment_report.txt: A text log detailing whether Entailments 1 through 4 resulted in a "PASS" or "FAIL".
+entailment_report.txt: A validation log confirming whether Entailments 1 through 4 successfully validated as true ("PASS") or failed rules ("FAIL").
 
-answers.txt: A text file documenting the structured results of the 4 SPARQL queries (e.g., ongoing assignment statuses, project counts, and grouped city/country data).
+answers.txt: The final data report housing the text-formatted tables and rows returned by the executed SPARQL queries.
