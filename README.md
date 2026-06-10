@@ -13,7 +13,7 @@
 ### Project Description
 This project implements a Semantic Web data pipeline using Python, `rdflib`, and `owlrl` to parse tabular data into a structured knowledge graph. 
 
-The primary objective of this project is to build and analyze an RDF graph by determining the optimal strategy for:
+The primary objective of this project is to build and analyze an RDF graph using:
 * **Data Transformation:** Converting raw CSV data (`placements.csv`) regarding personnel assignments, projects, and organizations into formalized RDF triples using custom namespaces.
 * **Ontology & Reasoning:** Applying RDFS semantics and reasoning (entailment) via `owlrl` using a predefined schema (`schema.ttl`) to infer new relationships and validate data integrity.
 * **Data Extraction (SPARQL):** Formulating and executing complex SPARQL queries to extract insights, such as calculating project assignment statistics, filtering by date constraints, and identifying multi-country organizational operations.
